@@ -39,10 +39,11 @@ def api():
         links = Link.query.all()
         return jsonify([link.to_json() for link in links])
 
-    url = request.form.get('url')
+    request_data = request.json or request.form
+    url = request_data.get('url')
     if url is None or not validators.url(url):
         return error_response('Invalid URL')
-    id_ = request.form.get('id') or hash_string(url)
+    id_ = request_data.get('id') or hash_string(url)
     link_by_id = Link.query.get(id_)
     link_by_url = Link.query.filter_by(url=url).one_or_none()
 
