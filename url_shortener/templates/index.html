@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL shortener</title>
+</head>
+<body>
+  <form class="url-shortener" action="/api/" method="post">
+    <label for="url-input">URL:</label>
+    <input type="url" name="url" id="url-input" value="" placeholder="https://example.com" required>
+
+    <label for="alias-input">Alias (optional):</label>
+    <input type="text" name="id" value="" id="alias-input">
+
+    <button>Submit</button>
+  </form>
+
+  <p class="message"></p>
+  <div class="list-of-urls"></div>
+
+  <script src="{{ url_for('static', filename='form_handling.js') }}"></script>
+</body>
+</html>

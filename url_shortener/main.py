@@ -2,7 +2,7 @@ import hashlib
 from http import HTTPStatus
 import os
 
-from flask import Flask, request, jsonify, url_for, redirect
+from flask import Flask, request, jsonify, url_for, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
 import validators
 
@@ -71,6 +71,10 @@ def api_link(id):
     if link is None:
         return error_response('Not found', HTTPStatus.NOT_FOUND)
     return link.to_json()
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/<id>', methods=['GET'])
 def link(id):
