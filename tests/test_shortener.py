@@ -2,20 +2,28 @@ from http import HTTPStatus
 
 import pytest
 
-from url_shortener.main import app, db, Link
+from url_shortener import create_app, db
+from url_shortener.models import Link
 
-
-app.config['TESTING'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+@pytest.fixture(scope='session')
+def app():
+    app = create_app('config')
+    app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+    app_context = app.app_context()
+    app_context.push()
+    yield app
+    app_context.pop()
 
 @pytest.fixture()
-def client():
+def client(app):
     db.create_all()
     link1 = Link(id='example1', url='http://example1.com')
     link2 = Link(id='example2', url='http://example2.com')
     db.session.add_all([link1, link2])
     db.session.commit()
     yield app.test_client()
+    db.session.remove()
     db.drop_all()
 
 @pytest.mark.parametrize(

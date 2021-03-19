@@ -1,39 +1,16 @@
-import hashlib
 from http import HTTPStatus
-import os
 
-from flask import Flask, request, jsonify, url_for, redirect, render_template
-from flask_sqlalchemy import SQLAlchemy
+from flask import Blueprint, jsonify, redirect, render_template, request
 import validators
 
+from url_shortener import db
+from url_shortener.models import Link
+from url_shortener.utilities import error_response, hash_string
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
-db = SQLAlchemy(app)
 
-def hash_string(string, length=6):
-    bytestring = string.encode()
-    return hashlib.sha1(bytestring).hexdigest()[:length]
+bp = Blueprint('shortener', __name__)
 
-class Link(db.Model):
-    __tablename__ = 'links'
-    id = db.Column(db.String, primary_key=True)
-    url = db.Column(db.String, unique=True, nullable=False)
-
-    def to_json(self):
-        return {
-            'id': self.id,
-            'original_url': self.url,
-            'short_url': url_for('link', id=self.id, _external=True),
-            'api_url': url_for('api_link', id=self.id, _external=True),
-        }
-
-def error_response(message, code=HTTPStatus.BAD_REQUEST):
-    return ({'error': message}, code)
-
-@app.route('/api/', methods=['GET', 'POST'])
+@bp.route('/api/', methods=['GET', 'POST'])
 def api():
     if request.method == 'GET':
         links = Link.query.all()
@@ -65,18 +42,18 @@ def api():
     db.session.commit()
     return (new_link.to_json(), HTTPStatus.CREATED)
 
-@app.route('/api/<id>', methods=['GET'])
+@bp.route('/api/<id>', methods=['GET'])
 def api_link(id):
     link = Link.query.get(id)
     if link is None:
         return error_response('Not found', HTTPStatus.NOT_FOUND)
     return link.to_json()
 
-@app.route('/')
+@bp.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/<id>', methods=['GET'])
+@bp.route('/<id>', methods=['GET'])
 def link(id):
     link = Link.query.get_or_404(id)
     return redirect(link.url)
