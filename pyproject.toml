@@ -9,6 +9,7 @@ python = "^3.9"
 Flask = "^1.1.2"
 Flask-SQLAlchemy = "^2.4.4"
 validators = "^0.18.2"
+python-dotenv = "^0.15.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"

@@ -7,9 +7,7 @@ from url_shortener.models import Link
 
 @pytest.fixture(scope='session')
 def app():
-    app = create_app('config')
-    app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+    app = create_app('testing')
     app_context = app.app_context()
     app_context.push()
     yield app
