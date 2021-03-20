@@ -15,15 +15,15 @@ class BaseConfig(object):
     SECRET_KEY = os.getenv('SECRET_KEY')
 
 class DevConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DB_URL') or \
+    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
 
 class TestConfig(BaseConfig):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DB_URL') or 'sqlite://'
+    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL') or 'sqlite://'
 
 class ProdConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = os.getenv('PROD_DB_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 config = {
     'development': DevConfig,
