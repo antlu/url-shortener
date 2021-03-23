@@ -30,16 +30,23 @@ form.addEventListener('submit', e => {
   })
   .then(response => {
     if (response.ok) form.reset();
-    if (response.status == 200) return 'URL already in list';
+    if (response.status == 200) return { error: true, text: 'URL already in list' };
     if (response.status == 201) {
       getData();
-      return 'New URL added';
+      return { error: false, text: 'New URL added' };
     }
-    return response.json().then(({ error }) => error);
+    return response.json();
   })
-  .then(msg => {
-    const message = document.querySelector('.message');
-    message.textContent = msg;
+  .then(json => {
+    const alert = document.querySelector('.alert');
+    if (json.error) {
+      alert.classList.remove('alert-success');
+      alert.classList.add('alert-danger');
+    } else {
+      alert.classList.remove('alert-danger');
+      alert.classList.add('alert-success');
+    };
+    alert.textContent = json.text;
   });
 });
 

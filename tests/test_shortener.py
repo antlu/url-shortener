@@ -53,7 +53,7 @@ def test_correct_addition(client, json):
 def test_incorrect_addition(client, json, http_code, msg):
     response = client.post('/api/', json=json)
     assert response.status_code == http_code
-    assert msg in response.json['error']
+    assert msg in response.json['text']
 
 def test_retrieval_when_posting_existing_one(client):
     existing_record = {'id': 'example1', 'url': 'http://example1.com'}
@@ -76,7 +76,7 @@ def test_retrieval_one(client):
 def test_bad_retrieval(client):
     response = client.get('/api/none')
     assert response.status_code == HTTPStatus.NOT_FOUND
-    assert 'Not found' in response.json['error']
+    assert 'Not found' in response.json['text']
 
 def test_redirect(client):
     response1 = client.get('/example1')
