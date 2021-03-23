@@ -3,21 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
   <title>URL shortener</title>
 </head>
 <body>
-  <form class="url-shortener" action="/api/" method="post">
-    <label for="url-input">URL:</label>
-    <input type="url" name="url" id="url-input" value="" placeholder="https://example.com" required>
+  <div class="container">
+    <h1 class="mb-3">URL shortener</h1>
 
-    <label for="alias-input">Alias (optional):</label>
-    <input type="text" name="id" value="" id="alias-input">
+    <form class="row row-cols-auto align-items-center mb-3 url-shortener" action="/api/" method="post">
+      <div class="col">
+        <div class="row">
+          <label for="url-input" class="col-auto col-form-label-lg">URL:</label>
+          <input class="col form-control form-control-lg" type="url" name="url" id="url-input" value="" placeholder="https://example.com" required>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <label for="alias-input" class="col-auto col-form-label-lg">Alias (optional):</label>
+          <input class="col form-control form-control-lg" type="text" name="id" value="" id="alias-input">
+        </div>
+      </div>
+      <div class="col">
+        <button class="btn btn-primary btn-lg">Submit</button>
+      </div>
+    </form>
 
-    <button>Submit</button>
-  </form>
-
-  <p class="message"></p>
-  <div class="list-of-urls"></div>
+    <p class="alert" role="alert"></p>
+    <div class="list-of-urls"></div>
+  </div>
 
   <script src="{{ url_for('static', filename='form_handling.js') }}"></script>
 </body>
