@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=dbpass
+      - POSTGRES_DB=shortener
+    ports:
+      - 5433:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  django:
+    build: .
+    environment:
+      - SECRET_KEY=dev
+      - DEV_DATABASE_URL=postgresql://dev:dbpass@postgres/shortener
+    volumes:
+      - .:/usr/local/src/url_shortener
+    ports:
+      - 5000:5000
+    depends_on:
+      - postgres
+volumes:
+  postgres_data:
