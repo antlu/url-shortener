@@ -14,9 +14,12 @@ def create_app(config_name=env):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     if not app.config['SECRET_KEY']:
-        raise ImproperlyConfigured("No SECRET_KEY set", env)
+        raise ImproperlyConfigured("No SECRET_KEY set")
 
     db.init_app(app)
+
+    from url_shortener.commands import init_db_command
+    app.cli.add_command(init_db_command)
 
     from url_shortener.views import bp
     app.register_blueprint(bp)
